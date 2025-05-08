@@ -8,8 +8,8 @@ class HttpResponse:
         self.body = body
 
     def get_readable_content(self) -> str:
-
         content_type = self.headers.get('Content-Type', '').lower()
+        print(f"DEBUG - Content-Type: {content_type}")  # Add this debug line
 
         # Use the appropriate parser
         from go2web.parsers.json_parser import format_json

@@ -33,7 +33,9 @@ class DuckDuckGoSearch:
     def extract_search_results(self, html_str: str) -> List[SearchResult]:
         results = []
         pattern = re.compile(
-            r'<h2 class="result__title">.*?<a.*?href="(.*?)".*?>(.*?)</a>.*?<a.*?class="result__snippet".*?>(.*?)</a>',
+            r'<a class="result__url" href="([^"]+)".*?>' +
+            r'.*?<a class="result__a" href="[^"]+">(.*?)</a>' +
+            r'.*?<a class="result__snippet"[^>]*>(.*?)</a>',
             re.DOTALL
         )
         

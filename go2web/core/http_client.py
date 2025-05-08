@@ -83,7 +83,7 @@ class HttpClient:
             return None
     
     def _parse_response(self, response_str: str) -> HttpResponse:
-        # Split headers and body
+        # Split headers and body - find the first occurrence of double line break
         header_end = response_str.find('\r\n\r\n')
         if header_end == -1:
             header_end = response_str.find('\n\n')
@@ -92,7 +92,7 @@ class HttpClient:
             return HttpResponse(500, {}, "Invalid response from server")
         
         headers_str = response_str[:header_end]
-        body = response_str[header_end + 4:] if header_end + 4 <= len(response_str) else ""
+        body = response_str[header_end + (4 if '\r\n\r\n' in response_str[:header_end+4] else 2):]
         
         # Parse status line
         status_match = re.match(r'HTTP/\d\.\d\s+(\d+)\s+(.+)', headers_str.split('\n')[0])
@@ -102,6 +102,7 @@ class HttpClient:
         status_code = int(status_match.group(1))
         headers = {}
         for line in headers_str.split('\n')[1:]:
+            line = line.strip()
             if ':' in line:
                 key, value = line.split(':', 1)
                 headers[key.strip()] = value.strip()
