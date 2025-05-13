@@ -14,18 +14,19 @@ def handle_help():
 
 def handle_url(url):
     if not url.startswith("http://") and not url.startswith("https://"):
-        url = "https://" + url  # Default to HTTPS
+        url = "https://" + url
 
     cached = get_cache(url)
     if cached:
         print("[*] Loaded from cache")
         print(cached)
+        print("This is a cached response.")
         return
 
     client = HTTPClient()
     try:
         headers, body = client.make_request(url)
-        parsed = parse_response(headers, body)
+        parsed = parse_response(headers, body) 
         print(parsed)
         set_cache(url, parsed)
     except Exception as e:
